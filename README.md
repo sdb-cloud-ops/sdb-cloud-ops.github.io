@@ -21,12 +21,11 @@ We will use the `gcloud containers create` command to create our `sdb-cluster` u
     [--min-nodes MIN_NODES]
     [--max-nodes MAX_NODES]
 
-Example command
+###### Example command
 ```
 gcloud container clusters create sdb-cluster --region=us-east4 --node-locations=us-east4-a --machine-type=n2-standard-16 --image-type=cos --enable-ip-alias --create-subnetwork name=sdb-subnet --enable-autoscaling --num-nodes=4 --min-nodes=0 --max-nodes=10
 ```
-
-Expected output
+###### Expected output
 ```
 WARNING: Starting in January 2021, clusters will use the Regular release channel by default when `--cluster-version`, `--release-channel`, `--no-enable-autoupgrade`, and `--no-enable-autorepair` flags are not specified.
 WARNING: Starting with version 1.18, clusters will have shielded GKE nodes by default.
@@ -41,12 +40,11 @@ sdb-cluster  us-east4  1.21.5-gke.1302  35.245.222.251  n2-standard-16  1.21.5-g
 
 Run the `gcloud container clusters get-credentials` command to connect to the kubernetes cluster
 
-Example command
+###### Example command
 ```
 gcloud container clusters get-credentials sdb-cluster --region us-east4 --project memsql-team-se
 ```
-
-Expected output
+###### Expected output
 ```
 Fetching cluster endpoint and auth data.
 kubeconfig entry generated for sdb-cluster.
@@ -60,7 +58,7 @@ If you have kubectl correctly installed, you should now be able to run `kubectl 
 
 The `memsql/operator` can be pulled from [Docker Hub](https://hub.docker.com/r/memsql/operator/tags) or from the [Red Hat container registry](https://docs.singlestore.com/db/v7.6/en/deploy/kubernetes/download-the-memsql-operator.html)
 
-Example with Docker
+###### Example with Docker
 ```
 docker pull memsql/operator:1.2.5-83e8133a
 ```
@@ -71,7 +69,7 @@ Download the [object definition files](https://docs.singlestore.com/db/v7.6/en/d
 
 Edit the [deployment.yaml](https://docs.singlestore.com/db/v7.6/en/deploy/kubernetes/create-the-object-definition-files/deployment-yaml.html) to reference the Docker image just pulled.
 
-Example spec
+###### Example spec
 ```
     spec:
       serviceAccountName: memsql-operator
@@ -83,20 +81,19 @@ Example spec
 
 In order to edit the [memsql-cluster.yaml](https://docs.singlestore.com/db/v7.6/en/deploy/kubernetes/create-the-object-definition-files/memsql-cluster-yaml.html) you will need your license key from the customer [portal](https://auth.singlestore.com/auth/realms/memsql/protocol/openid-connect/auth?client_id=customer-portal-login&redirect_uri=https%3A%2F%2Fportal.singlestore.com%2F&state=0e422fe0-0db1-45d3-a27d-e9b27c64cd82&response_mode=fragment&response_type=code&scope=openid&nonce=4022881b-27c3-406a-b0e0-ba83cd5d9985) and a hashed version of a secure password for the admin user. 
 
-In order to hash a secure password, we have an example python script. 
+In order to hash a secure password, we have an example python script
 ```
 from hashlib import sha1
 print("*" + sha1(sha1('secretpass'.encode('utf-8')).digest()).hexdigest().upper())
 ```
-#### How to use the script
-Save the script in a file named `hash_password.py`, replacing `secretpass` with a secure password. Make sure it is executable with - `chmod +x hash_password.py`, then run the script with `python3 hash_password.py`. It will print the hashed password to the command line, where you can copy and paste directly to the `memsql-cluster.yaml` file within the quotes by the `adminHashedPassword:`
+###### How to use the script
+> Save the script in a file named `hash_password.py`, replacing `secretpass` with a secure password. Make sure it is executable with - `chmod +x hash_password.py`, then run the script with `python3 hash_password.py`. It will print the hashed password to the command line, where you can copy and paste directly to the `memsql-cluster.yaml` file within the quotes by the `adminHashedPassword:`
+> <br></br>
 
-  
 Create a namespace for the Kubernetes Objects
 ```
 kubectl create ns singlestore
 ```
-
 Add the namespace to the object metadata
 ```
 apiVersion: memsql.com/v1alpha1
@@ -105,7 +102,6 @@ metadata:
   name: memsql-cluster
   namespace: singlestore
 ```
-
 Add the `licence_key`, `hashed_password`, and use the latest `memsql/node` image
 ```
 spec:
@@ -115,52 +111,53 @@ spec:
     repository: memsql/node
     tag: latest
 ```
-
 Change the redundancy level to `2`
 ```
   redundancyLevel: 2
 ```
 The rest of the edits to the `aggregatorSpec` and the `leafSpec` are custom depending on how many aggregators and leafs you want and how many resources you want allocated to them. 
 
-
 ### Create the Kubernetes Objects
 
-`kubectl -n singlestore create -f rbac.yaml`
-
-Expected output
+Create the role-based access control
+```
+kubectl -n singlestore create -f rbac.yaml
+```
+###### Expected output
 ```
 serviceaccount/memsql-operator created
 role.rbac.authorization.k8s.io/memsql-operator created
 rolebinding.rbac.authorization.k8s.io/memsql-operator created
 ```
-
-`kubectl -n singlestore create -f memsql-cluster-crd.yaml`
-
-Expected output
+Create the memsql custom resource definition
+```
+kubectl -n singlestore create -f memsql-cluster-crd.yaml
+```
+###### Expected output
 ```
 Warning: apiextensions.k8s.io/v1beta1 CustomResourceDefinition is deprecated in v1.16+, unavailable in v1.22+; use apiextensions.k8s.io/v1 CustomResourceDefinition
 customresourcedefinition.apiextensions.k8s.io/memsqlclusters.memsql.com created
 ```
-
-`kubectl -n singlestore create -f deployment.yaml`
-
-Expected output
+Create the Operator deployment
+```
+kubectl -n singlestore create -f deployment.yaml
+```
+###### Expected output
 ```
 deployment.apps/memsql-operator created
 ```
-If you get a status of ImagePullBackOff, it means that the image specified in the deployment.yaml could not be found
+Now you should be able to run `kubectl -n singlestore get pods` and see that the Operator pod is running.
 
-Now you should be able to run `kubectl -n singlestore get pods`
-
-Expected output
+###### Expected output
 ```
 NAME                               READY   STATUS    RESTARTS   AGE
 memsql-operator-79874797f4-9t47r   1/1     Running   0          2m50s
 ```
-
-`kubectl -n singlestore create -f memsql-cluster.yaml`
-
-Expected output
+Create the memsql custom resource
+```
+kubectl -n singlestore create -f memsql-cluster.yaml
+```
+###### Expected output
 ```
 memsqlcluster.memsql.com/memsql-cluster created
 ```
