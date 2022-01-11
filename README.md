@@ -25,18 +25,7 @@ We will use the `gcloud containers create` command to create our `sdb-cluster` u
 ```
 gcloud container clusters create sdb-cluster --region=us-east4 --node-locations=us-east4-a --machine-type=n2-standard-16 --image-type=cos --enable-ip-alias --create-subnetwork name=sdb-subnet --enable-autoscaling --num-nodes=4 --min-nodes=0 --max-nodes=10
 ```
-###### Expected output
-```
-WARNING: Starting in January 2021, clusters will use the Regular release channel by default when `--cluster-version`, `--release-channel`, `--no-enable-autoupgrade`, and `--no-enable-autorepair` flags are not specified.
-WARNING: Starting with version 1.18, clusters will have shielded GKE nodes by default.
-WARNING: The Pod address range limits the maximum size of the cluster. Please refer to https://cloud.google.com/kubernetes-engine/docs/how-to/flexible-pod-cidr to learn how to optimize IP address allocation.
-Creating cluster sdb-cluster in us-east4...done.                                                  
-Created [https://container.googleapis.com/v1/projects/memsql-team-se/zones/us-east4/clusters/sdb-cluster].
-To inspect the contents of your cluster, go to: https://console.cloud.google.com/kubernetes/workload_/gcloud/us-east4/sdb-cluster?project=memsql-team-se
-kubeconfig entry generated for sdb-cluster.
-NAME         LOCATION  MASTER_VERSION   MASTER_IP       MACHINE_TYPE    NODE_VERSION     NUM_NODES  STATUS
-sdb-cluster  us-east4  1.21.5-gke.1302  35.245.222.251  n2-standard-16  1.21.5-gke.1302  4          RUNNING
-```
+> Note: Warnings are expected in the output at this time.
 
 Run the `gcloud container clusters get-credentials` command to connect to the kubernetes cluster
 
@@ -44,12 +33,6 @@ Run the `gcloud container clusters get-credentials` command to connect to the ku
 ```
 gcloud container clusters get-credentials sdb-cluster --region us-east4 --project memsql-team-se
 ```
-###### Expected output
-```
-Fetching cluster endpoint and auth data.
-kubeconfig entry generated for sdb-cluster.
-```
-
 If you have kubectl correctly installed, you should now be able to run `kubectl get ns` without errors.
 
 ## Deploy SingleStore on Kubernetes
@@ -123,32 +106,15 @@ Create the role-based access control
 ```
 kubectl -n singlestore create -f rbac.yaml
 ```
-###### Expected output
-```
-serviceaccount/memsql-operator created
-role.rbac.authorization.k8s.io/memsql-operator created
-rolebinding.rbac.authorization.k8s.io/memsql-operator created
-```
 Create the memsql custom resource definition
 ```
 kubectl -n singlestore create -f memsql-cluster-crd.yaml
-```
-###### Expected output
-```
-Warning: apiextensions.k8s.io/v1beta1 CustomResourceDefinition is deprecated in v1.16+, unavailable in v1.22+; use apiextensions.k8s.io/v1 CustomResourceDefinition
-customresourcedefinition.apiextensions.k8s.io/memsqlclusters.memsql.com created
 ```
 Create the Operator deployment
 ```
 kubectl -n singlestore create -f deployment.yaml
 ```
-###### Expected output
-```
-deployment.apps/memsql-operator created
-```
 Now you should be able to run `kubectl -n singlestore get pods` and see that the Operator pod is running.
-
-###### Expected output
 ```
 NAME                               READY   STATUS    RESTARTS   AGE
 memsql-operator-79874797f4-9t47r   1/1     Running   0          2m50s
@@ -156,9 +122,5 @@ memsql-operator-79874797f4-9t47r   1/1     Running   0          2m50s
 Create the memsql custom resource
 ```
 kubectl -n singlestore create -f memsql-cluster.yaml
-```
-###### Expected output
-```
-memsqlcluster.memsql.com/memsql-cluster created
 ```
 
