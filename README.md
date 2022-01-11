@@ -27,7 +27,7 @@ gcloud container clusters create sdb-cluster --region=us-east4 --node-locations=
 ```
 > Note: Warnings are expected in the output at this time.
 
-Run the `gcloud container clusters get-credentials` command to connect to the kubernetes cluster.
+Run the `gcloud container clusters get-credentials` command to connect to your Kubernetes cluster.
 
 ###### Example command
 ```
