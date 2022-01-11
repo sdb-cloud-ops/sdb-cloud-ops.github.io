@@ -70,8 +70,7 @@ from hashlib import sha1
 print("*" + sha1(sha1('secretpass'.encode('utf-8')).digest()).hexdigest().upper())
 ```
 ###### How to use the script
-> Save the script in a file named `hash_password.py`, replacing `secretpass` with a secure password. Make sure it is executable with - `chmod +x hash_password.py`, then run the script with `python3 hash_password.py`. It will print the hashed password to the command line, where you can copy and paste directly to the `memsql-cluster.yaml` file within the quotes by the `adminHashedPassword:`
-> <br></br>
+> Save the script in a file named `hash_password.py`, replacing `secretpass` with a secure password. Make sure it is executable with `chmod +x hash_password.py`, then run the script with `python3 hash_password.py`. It will print the hashed password to the command line, where you can copy and paste directly to the `memsql-cluster.yaml` file.
 
 Create a namespace for the Kubernetes Objects
 ```
@@ -85,7 +84,7 @@ metadata:
   name: memsql-cluster
   namespace: singlestore
 ```
-Add the `licence_key`, `hashed_password`, and use the latest `memsql/node` image
+Add the `licence_key`, `hashed_password` keeping the quotes, and use the latest `memsql/node` image
 ```
 spec:
   license: <license_key>
@@ -98,7 +97,7 @@ Change the redundancy level to `2`
 ```
   redundancyLevel: 2
 ```
-The rest of the edits to the `aggregatorSpec` and the `leafSpec` are custom depending on how many aggregators and leafs you want and how many resources you want allocated to them. 
+The rest of the edits to the `aggregatorSpec` and the `leafSpec` are custom depending on how many aggregators and leafs you want and how many resources you want allocated to them. Save all yaml files to an accessible directory.
 
 ### Create the Kubernetes Objects
 
@@ -123,4 +122,21 @@ Create the memsql custom resource
 ```
 kubectl -n singlestore create -f memsql-cluster.yaml
 ```
+Now you can run `kubectl -n singlestore get memsql` to see the custom resource that was created.
+```
+NAME             AGGREGATORS   LEAVES   REDUNDANCY LEVEL   AGE
+memsql-cluster   1             1        2                  30h
+```
+### Connect to the database
 
+Run `kubectl -n singlestore get services` in order to get the `ddl` endpoint.
+```
+NAME                     TYPE           CLUSTER-IP       EXTERNAL-IP     PORT(S)          AGE
+svc-memsql-cluster       ClusterIP      None             <none>          3306/TCP         30h
+svc-memsql-cluster-ddl   LoadBalancer   <ip-address>     <ip-address>    3306:30907/TCP   30h
+```
+The IP address under `EXTERNAL-IP` in the `svc-memsql-cluster-ddl` row is the one that you will use to connect to your database. You will use the `admin` user and the un-hashed password with port `3306` to connect. Here is an example `mysql` connection command:
+```
+mysql -h<ip-address> -uadmin -P3306 -p<secretpass>
+```
+This concludes setting up SingleStore on Google Kubernetes Engine.
