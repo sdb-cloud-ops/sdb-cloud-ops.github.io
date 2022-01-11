@@ -135,7 +135,9 @@ NAME                     TYPE           CLUSTER-IP       EXTERNAL-IP     PORT(S)
 svc-memsql-cluster       ClusterIP      None             <none>          3306/TCP         30h
 svc-memsql-cluster-ddl   LoadBalancer   <ip-address>     <ip-address>    3306:30907/TCP   30h
 ```
-The IP address under `EXTERNAL-IP` in the `svc-memsql-cluster-ddl` row is the one that you will use to connect to your database. You will use the `admin` user and the un-hashed password with port `3306` to connect. Here is an example `mysql` connection command:
+The IP address under `EXTERNAL-IP` in the `svc-memsql-cluster-ddl` row is the one that you will use to connect to your database. You will use the `admin` user and the un-hashed password with port `3306` to connect. 
+
+Example `mysql` connection command
 ```
 mysql -h<ip-address> -uadmin -P3306 -p<secretpass>
 ```
