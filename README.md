@@ -8,7 +8,7 @@ Use the `gcloud` tool to configure the following default settings: your default 
 
 ## Creating and connecting to the Kubernetes cluster
 
-We will use the `gcloud containers create` command to create our `sdb-cluster` using the following optional flags
+We will use the `gcloud containers create` command to create our `sdb-cluster` using the following optional flags:
 
     [--network=NETWORK]
     [--subnetwork=SUBNETWORK]
@@ -27,7 +27,7 @@ gcloud container clusters create sdb-cluster --region=us-east4 --node-locations=
 ```
 > Note: Warnings are expected in the output at this time.
 
-Run the `gcloud container clusters get-credentials` command to connect to the kubernetes cluster
+Run the `gcloud container clusters get-credentials` command to connect to the kubernetes cluster.
 
 ###### Example command
 ```
@@ -39,7 +39,7 @@ If you have kubectl correctly installed, you should now be able to run `kubectl 
 
 ### Download the Operator image
 
-The `memsql/operator` can be pulled from [Docker Hub](https://hub.docker.com/r/memsql/operator/tags) or from the [Red Hat container registry](https://docs.singlestore.com/db/v7.6/en/deploy/kubernetes/download-the-memsql-operator.html)
+The `memsql/operator` can be pulled from [Docker Hub](https://hub.docker.com/r/memsql/operator/tags) or from the [Red Hat container registry](https://docs.singlestore.com/db/v7.6/en/deploy/kubernetes/download-the-memsql-operator.html).
 
 ###### Example with Docker
 ```
@@ -64,7 +64,7 @@ Edit the [deployment.yaml](https://docs.singlestore.com/db/v7.6/en/deploy/kubern
 
 In order to edit the [memsql-cluster.yaml](https://docs.singlestore.com/db/v7.6/en/deploy/kubernetes/create-the-object-definition-files/memsql-cluster-yaml.html) you will need your license key from the customer [portal](https://auth.singlestore.com/auth/realms/memsql/protocol/openid-connect/auth?client_id=customer-portal-login&redirect_uri=https%3A%2F%2Fportal.singlestore.com%2F&state=0e422fe0-0db1-45d3-a27d-e9b27c64cd82&response_mode=fragment&response_type=code&scope=openid&nonce=4022881b-27c3-406a-b0e0-ba83cd5d9985) and a hashed version of a secure password for the admin user. 
 
-In order to hash a secure password, we have an example python script
+In order to hash a secure password, we have an example python script:
 ```
 from hashlib import sha1
 print("*" + sha1(sha1('secretpass'.encode('utf-8')).digest()).hexdigest().upper())
@@ -129,7 +129,7 @@ memsql-cluster   1             1        2                  30h
 ```
 ### Connect to the database
 
-Run `kubectl -n singlestore get services` in order to get the `ddl` endpoint.
+Run `kubectl -n singlestore get services` in order to get the `ddl` endpoint
 ```
 NAME                     TYPE           CLUSTER-IP       EXTERNAL-IP     PORT(S)          AGE
 svc-memsql-cluster       ClusterIP      None             <none>          3306/TCP         30h
@@ -137,8 +137,8 @@ svc-memsql-cluster-ddl   LoadBalancer   <ip-address>     <ip-address>    3306:30
 ```
 The IP address under `EXTERNAL-IP` in the `svc-memsql-cluster-ddl` row is the one that you will use to connect to your database. You will use the `admin` user and the un-hashed password with port `3306` to connect. 
 
-Example `mysql` connection command
+###### Example connection command
 ```
 mysql -h<ip-address> -uadmin -P3306 -p<secretpass>
 ```
-This concludes setting up SingleStore on Google Kubernetes Engine.
+This concludes setting up SingleStore with Google Cloud Kubernetes Engine.
