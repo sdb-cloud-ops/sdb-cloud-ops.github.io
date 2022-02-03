@@ -52,6 +52,8 @@ Download the [object definition files](https://docs.singlestore.com/db/v7.6/en/d
 
 Edit the [deployment.yaml](https://docs.singlestore.com/db/v7.6/en/deploy/kubernetes/create-the-object-definition-files/deployment-yaml.html) and reference the image you downloaded, or you can pull it automatically.
 
+#### `deployment.yaml`
+
 ###### Example spec
 ```
     spec:
@@ -61,6 +63,8 @@ Edit the [deployment.yaml](https://docs.singlestore.com/db/v7.6/en/deploy/kubern
           image: memsql/operator:1.2.5-83e8133a
           imagePullPolicy: IfNotPresent
 ```
+
+#### `memsql-cluster.yaml`
 
 In order to edit the [memsql-cluster.yaml](https://docs.singlestore.com/db/v7.6/en/deploy/kubernetes/create-the-object-definition-files/memsql-cluster-yaml.html) you will need your license key from the customer [portal](https://auth.singlestore.com/auth/realms/memsql/protocol/openid-connect/auth?client_id=customer-portal-login&redirect_uri=https%3A%2F%2Fportal.singlestore.com%2F&state=0e422fe0-0db1-45d3-a27d-e9b27c64cd82&response_mode=fragment&response_type=code&scope=openid&nonce=4022881b-27c3-406a-b0e0-ba83cd5d9985) and a hashed version of a secure password for the admin user. 
 
