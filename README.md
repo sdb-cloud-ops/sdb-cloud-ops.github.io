@@ -37,7 +37,7 @@ If you have kubectl correctly installed, you should now be able to run `kubectl 
 
 ## Deploy SingleStore on Kubernetes
 
-### Download the Operator image
+### Download the Operator image (optional if not pulling from deployment.yaml)
 
 The `memsql/operator` can be pulled from [Docker Hub](https://hub.docker.com/r/memsql/operator/tags) or from the [Red Hat container registry](https://docs.singlestore.com/db/v7.6/en/deploy/kubernetes/download-the-memsql-operator.html).
 
@@ -50,7 +50,7 @@ docker pull memsql/operator:1.2.5-83e8133a
 
 Download the [object definition files](https://docs.singlestore.com/db/v7.6/en/deploy/kubernetes/create-the-object-definition-files.html) from our site, and save them in an accessible directory. The [rbac.yaml](https://docs.singlestore.com/db/v7.6/en/deploy/kubernetes/create-the-object-definition-files/rbac-yaml.html) and the [memsql-cluster-crd.yaml](https://docs.singlestore.com/db/v7.6/en/deploy/kubernetes/create-the-object-definition-files/memsql-cluster-crd-yaml.html) do not require edits.
 
-Edit the [deployment.yaml](https://docs.singlestore.com/db/v7.6/en/deploy/kubernetes/create-the-object-definition-files/deployment-yaml.html) to reference the Docker image just pulled.
+Edit the [deployment.yaml](https://docs.singlestore.com/db/v7.6/en/deploy/kubernetes/create-the-object-definition-files/deployment-yaml.html) and reference the image you downloaded, or you can pull it automatically.
 
 ###### Example spec
 ```
