@@ -31,7 +31,7 @@ Run the `gcloud container clusters get-credentials` command to connect to your K
 
 ###### Example command
 ```
-gcloud container clusters get-credentials sdb-cluster --region us-east4 --project memsql-team-se
+gcloud container clusters get-credentials sdb-cluster --region us-east4 --project <project-name>
 ```
 If you have kubectl correctly installed, you should now be able to run `kubectl get ns` without errors.
 
