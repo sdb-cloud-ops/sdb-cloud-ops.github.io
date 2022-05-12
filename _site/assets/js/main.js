@@ -45,7 +45,7 @@
                         return
                     }
                     var query = $(this).val();
-                    var searchPage = "http://localhost:4000/sdb-cloud-ops.github.io/search/?q=" + query;
+                    var searchPage = "http://localhost:4000/search/?q=" + query;
                     document.location = searchPage;
                     return false;
                 });
