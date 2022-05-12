@@ -1,0 +1,52 @@
+#- title: Documentation
+#  url: docs
+#  links:
+#    - title: "Getting Started"
+#      url: "docs/getting-started"
+#      children:
+#        - title: Features
+#          url: "docs/getting-started#getting-started"
+#        - title: Development
+#          url: "docs/getting-started#development"
+#        - title: Customization
+#          url: "docs/getting-started#customization"
+#    - title: "About"
+#      url: "about"
+#      children:
+#        - title: Support
+#          url: "about#Support"
+#    - title: "News"
+#      url: "news"
+#    - title: "Singlestore"
+#      url: "docs/S2_AWS/s2"
+#- title: "Extras"
+#  url: "docs/extras"
+#  links:
+#    - title: Quizzes
+#      url: "docs/extras/example-quiz"
+#    - title: Tags Page
+#      url: "tags"
+- title: Technical Guides
+  url: docs
+  links:
+    - title: "Deploying"
+      url: "docs/Deploying/deploying_home"
+      children:
+        - title: AWS
+          url: "docs/Deploying/AWS/deploying"
+        - title: GCP
+          url: "docs/Deploying/GCP/deploying"
+        - title: Azure
+          url: "docs/Deploying/Azure/deploying"
+    - title: "Monitoring"
+      url: "docs/Monitoring/monitoring"
+    - title: "Scaling"
+      url: "docs/Scaling/scaling"
+#    - title: "DisasterRecovery"
+#      url: "docs/DisasterRecovery/disaster_recovery"
+#- title: Docker Artifacts
+#  links:
+#    - title: "memsql/operator"
+#    - title: "memsql/node"
+#    - title: "memsql/tools"
+#    - title: "memsql/cluster-in-a-box"

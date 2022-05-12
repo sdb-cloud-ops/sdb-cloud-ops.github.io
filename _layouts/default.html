@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <!-- Copyright 2019-2021 Vanessa Sochat-->
+  {% include head.html %}
+  {% include google-analytics.html %}
+  <body class="td-section">
+    {% include header.html %}
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+          {% include sidebar.html %}
+          </div>
+          <div class="d-none d-xl-block col-xl-2 td-toc d-print-none">
+              <div class="td-page-meta ml-2 pb-1 pt-2 mb-0 box0" hidden>
+                  {% include editable.html %}
+              </div>
+              <nav id="TableOfContents"><ul>
+              <li><ul id="TOC">
+                <!-- Links will be appended here-->
+              </ul></li>
+              </ul></nav>
+          </div>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            <nav aria-label="breadcrumb" class="d-none d-md-block d-print-none">
+                <!--
+        	      <ol class="breadcrumb spb-1">
+                    {% assign crumbs = page.url | append: "/"  | replace: '//', '/' | split: '/' %}
+                    {% for crumb in crumbs offset: 1 %}
+                        {% if crumb != "index" %}
+                            {% if forloop.last %}
+
+                            <li class="breadcrumb-item active" aria-current="page">
+                    	          <a href="{{ site.url }}{{ site.baseurl }}{{ page.url }}">{{ page.title }}</a>
+                            </li>
+
+                            {% else %}
+                                {% if page.url != "/docs/" %}
+                                    <li class="breadcrumb-item">
+                                        <a href="{{ site.url }}{{ site.baseurl }}{% assign crumb_limit = forloop.index | plus: 1 %}{% for crumb in crumbs limit: crumb_limit %}{{ crumb | append: '/' }}{% endfor %}">{% if crumb == "docs" %}Technical Guides{% else %}{{ crumb | replace:'-',' ' | remove:'.html' | capitalize }}{% endif %}</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+        	      </ol>
+                -->
+                <ol class="breadcrumb spb-1">
+
+                    {% assign page_url_var = page.url %}
+
+                    <!--<a href="{{ page.url }}">{{ page_url_var }}</a>-->
+
+                    {% if page_url_var == "/" %}
+                    {% else %}
+                        {% assign break_loop_section = false %}
+                        {% assign break_loop_entry = false %}
+                        {% assign url_match_found = "no" %}
+
+                        {% for section in site.data.toc %}
+                            <!------------------->
+                            {% assign section_url_var = section.url | prepend: "/" | replace: '//', '/' | rstrip %}
+
+                            <!-- the below variable is created specidifically to check /docs condition. the url is coming as /docs/ -->
+                            {% assign section_url_var2 = section.url | prepend: "/" | append: "/" | replace: '//', '/' | rstrip %}
+
+                            {% assign section_title_var = section.title %}
+                            <!--{{ page_url_var }}^^^{{ section_url_var }}^^^{{ section_url_var2 }}^^^{{ section_title_var }}-->
+
+                            {% if page_url_var == section_url_var or page_url_var == section_url_var2 %}
+                                <!--abc-->
+                                {% assign entry_title_var = "" %}
+                                {% assign entry_url_var = "" %}
+                                {% assign child_title_var = "" %}
+                                {% assign child_url_var = "" %}
+                                {% assign url_match_found = "yes" %}
+                            {% else %}
+                                <!--def-->
+                                {% if section.links %}
+                                    {% for entry in section.links %}
+                                        <!--****************-->
+                                        {% assign entry_title_var = entry.title %}
+                                        {% assign entry_url_var = entry.url | prepend: "/" | replace: '//', '/' | rstrip %}
+                                        <!--{{ entry_title_var }}^^^{{ entry_url_var }}-->
+
+                                        {% if entry_url_var == page_url_var %}
+                                            <!--@@@@@@@@@@@@@@@@@@@@@-->
+                                            {% assign break_loop_section = true %}
+                                            {% assign break_loop_entry = true %}
+                                            {% assign child_title_var = "" %}
+                                            {% assign child_url_var = "" %}
+                                            {% assign url_match_found = "yes" %}
+                                        {% break %}
+                                        {% else %}
+                                            <!--%%%%%%%%%%%%%%%%%%%%%-->
+                                            {% if entry.children %}
+                                                <!--&&&&&&&&&&&&&&&&&&-->
+                                                {% for child in entry.children %}
+                                                    {% assign child_title_var = child.title %}
+                                                    {% assign child_url_var = child.url | prepend: "/" | replace: '//', '/' | rstrip %}
+                                                    <!--{{ child_title_var }}!!!{{ child_url_var }}!!!{{ page_url_var }}-->
+                                                    {% if child_url_var == page_url_var %}
+                                                        <!--@@@@@@@@@@@@@@@@@@@@@-->
+                                                        {% assign break_loop_section = true %}
+                                                        {% assign break_loop_entry = true %}
+                                                        {% assign url_match_found = "yes" %}
+                                                    {% break %}
+                                                    {% else %}
+                                                        <!--%%%%%%%%%%%%%%%%%%%%%-->
+                                                        <!--<a href="{% if child.url %}{{ site.baseurl }}/{{ child.url }}{% else %}{{ child.external_url }}{% endif %}">{{ child.title }}</a>-->
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+
+                                            <!--<a href="{% if child.url %}{{ site.baseurl }}/{{ child.url }}{% else %}{{ child.external_url }}{% endif %}">{{ child.title }}</a>-->
+                                        {% endif %}
+
+
+
+                                        {% if break_loop_entry %}
+                                        {% break %}
+                                        {% endif %}
+
+                                    {% endfor %}
+                                {% endif %}
+                            {% endif %}
+
+                            {% if break_loop_section %}
+                            {% break %}
+                            {% endif %}
+
+                        {% endfor %}
+                        <!--###############-->
+                        <!--{{ section_title_var }}^^^{{ section_url_var }}-->
+                        {% if section_url_var != "" and section_title_var != "" and url_match_found == "yes" %}
+                            <li class="breadcrumb-item">
+                                <a href="{{ site.url }}{{ site.baseurl }}{{ section_url_var }}">{{ section_title_var }}</a>
+                            </li>
+                        {% endif %}
+                        <!--###############-->
+                        <!--^^^{{ entry_title_var }}^^^{{ entry_url_var }}-->
+                        {% if entry_url_var != "" and entry_title_var != "" and url_match_found == "yes" %}
+                            <li class="breadcrumb-item">
+                                <a href="{{ site.url }}{{ site.baseurl }}{{ entry_url_var }}">{{ entry_title_var }}</a>
+                            </li>
+                        {% endif %}
+
+                        <!--###############-->
+                        <!--{{ child_title_var }}^^^{{ child_url_var }}-->
+                        {% if child_url_var != "" and child_title_var != "" and url_match_found == "yes" %}
+                            <li class="breadcrumb-item">
+                                <a href="{{ site.url }}{{ site.baseurl }}{{ child_url_var }}">{{ child_title_var }}</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+
+<!--
+                    {% assign crumbs = page.url | append: "/"  | replace: '//', '/' | split: '/' %}
+                    {% for crumb in crumbs offset: 1 %}
+                        {% if crumb != "index" %}
+                            {% if forloop.last %}
+                            <li class="breadcrumb-item active" aria-current="page">
+                    	          <a href="{{ site.url }}{{ site.baseurl }}{{ page.url }}">{{ page.title }}</a>
+                            </li>
+                            {% else %}
+                                {% if page.url != "/docs/" %}
+                                    <li class="breadcrumb-item">
+                                        <a href="{{ site.url }}{{ site.baseurl }}{% assign crumb_limit = forloop.index | plus: 1 %}{% for crumb in crumbs limit: crumb_limit %}{{ crumb | append: '/' }}{% endfor %}">{% if crumb == "docs" %}Technical Guides{% else %}{{ crumb | replace:'-',' ' | remove:'.html' | capitalize }}{% endif %}</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                  -->
+        	      </ol>
+            </nav>
+
+
+           <div class="td-content">
+	      {{ content }}
+              {% if section.links %}<div class="section-index">
+               <hr class="panel-line">{% for child in section.links %}
+                 <div class="entry">
+                    <h5>
+                        <a href="{% if child.url %}{{ site.baseurl }}{{ child.url }}{% else %}{{ child.external_url }}{% endif %}">{{ child.title }}</a>
+                    </h5>
+                    <p>{{ child.description }}</p>
+                 </div>{% endfor %}
+              </div>{% endif %}
+              <!--{% include feedback.html %}-->
+           </div>
+          </main>
+        </div>
+      </div>
+      <!--{% include footer.html %}-->
+    </div>
+    {% include scripts.html %}
+  </body>
+</html>
+
