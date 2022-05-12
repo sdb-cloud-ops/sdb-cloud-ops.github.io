@@ -897,3 +897,9 @@ List aggregator node:
 List leaves node:
 
     memsqlctl show-leaves
+ 
+ 
+## Deployment Artifacts
+Deployment related files can be found at [https://github.com/sdb-cloud-ops/AWS](https://github.com/sdb-cloud-ops/AWS)
+ - k8s operator yamls
+ - terraform scripts
