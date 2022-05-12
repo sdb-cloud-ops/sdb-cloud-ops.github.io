@@ -16,4 +16,7 @@ Please use the left menu to navigate through the site.
 
 For quick searching, use the search bar on the left or use the [tags page]({{ site.url }}{{ site.baseurl }}/tags)
 
+
+For support please contact <sales@singlestore.com>
+
 <!--[Open an issue]({{ site.repo }}/issues) a-->
