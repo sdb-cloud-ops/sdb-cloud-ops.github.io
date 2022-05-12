@@ -23,7 +23,7 @@ author: Dinosaur Avocado
 #  Google search results) and in your feed.xml site description.
 
 # Add your baseurl here (your repository) but DO NOT CHANGE THE LINE NUMBER without editing .circleci/circle_urls.sh
-baseurl: "/sdb-cloud-ops.github.io" # the subpath of your site, e.g. /blog
+baseurl: "" # the subpath of your site, e.g. /blog
 
 # This is mostly for testing
 url: "https://sdb-cloud-ops.github.io" # the base hostname & protocol for your site
